@@ -1,0 +1,30 @@
+[package]
+name = "rust_matrix_rain"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "matrix_rain"
+path = "src/main.rs"
+
+[dependencies]
+# ratatui 0.28 ships crossterm 0.27 backend — feature flag activates it
+ratatui = { version = "0.28", features = ["crossterm"] }
+crossterm = "0.27"
+
+# Data-parallelism: par_iter_mut fans column updates across every CPU core
+rayon = "1.10"
+
+# System telemetry: zero-subprocess RAM / CPU readings via kernel APIs
+sysinfo = "0.31"
+
+# Thread-local PRNG — thread_rng() is safe inside rayon worker closures
+rand = "0.8"
+
+# ── Release profile: maximum throughput ───────────────────────────────────────
+[profile.release]
+opt-level     = 3
+lto           = "fat"
+codegen-units = 1
+panic         = "abort"
+strip         = "symbols"
